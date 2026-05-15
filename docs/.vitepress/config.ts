@@ -71,7 +71,6 @@ export default defineConfig({
         collapsed: false,
         items: [{ text: "死亡记录", link: "/game-log/" }],
       },
-      },
     ],
     docFooter: { prev: "上一页", next: "下一页" },
     outline: { label: "本页导航" },
