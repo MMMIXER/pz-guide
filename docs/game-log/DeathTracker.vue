@@ -3,12 +3,6 @@ import { ref, computed, onMounted, watch } from "vue";
 
 const PLAYERS = ["MIXER", "HE", "鵼kuong"];
 
-const OCCUPATIONS = [
-  "失业", "消防员", "警察", "公园管理员", "建筑工", "保安", "木匠",
-  "大盗", "厨师", "修理工", "农民", "渔夫", "医生", "退伍兵",
-  "护士", "健身教练", "汉堡店员工", "电工", "工程师", "机械师", "金属工",
-];
-
 const records = ref([]);
 const showForm = ref(false);
 
@@ -16,14 +10,11 @@ const newDeath = ref({
   date: new Date().toISOString().slice(0, 10),
   time: `${String(new Date().getHours()).padStart(2, "0")}:${String(new Date().getMinutes()).padStart(2, "0")}`,
   player: "MIXER",
-  character: "",
-  occupation: "失业",
-  daysSurvived: 1,
   cause: "",
   note: "",
 });
 
-const STORAGE_KEY = "pz-death-records";
+const STORAGE_KEY = "pz-death-records-v2";
 
 onMounted(() => {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -46,13 +37,14 @@ const stats = computed(() => {
 });
 
 const maxDeaths = computed(() => Math.max(...Object.values(stats.value), 1));
+
 const loserPlayer = computed(() => {
   if (records.value.length === 0) return null;
+  if (maxDeaths.value === 0) return null;
   let worst = PLAYERS[0];
   for (const p of PLAYERS) {
     if (stats.value[p] > stats.value[worst]) worst = p;
   }
-  if (stats.value[worst] === 0) return null;
   return worst;
 });
 
@@ -64,16 +56,11 @@ function addDeath() {
     date: newDeath.value.date,
     time: newDeath.value.time,
     player: newDeath.value.player,
-    character: newDeath.value.character || "未命名",
-    occupation: newDeath.value.occupation,
-    daysSurvived: newDeath.value.daysSurvived,
     cause: newDeath.value.cause || "未知",
     note: newDeath.value.note || "",
   });
-  newDeath.value.character = "";
   newDeath.value.cause = "";
   newDeath.value.note = "";
-  newDeath.value.daysSurvived = 1;
   showForm.value = false;
 }
 
@@ -90,12 +77,22 @@ function clearAll() {
 
 <template>
   <div class="death-tracker">
-    <!-- Stats Bar -->
+    <!-- Player Stat Cards -->
     <div class="stats-bar">
-      <div class="stat-card" v-for="p in PLAYERS" :key="p"
-        :class="{ 'loser-card': loserPlayer === p }">
+      <div
+        class="stat-card"
+        v-for="p in PLAYERS"
+        :key="p"
+        :class="{ 'loser-card': loserPlayer === p }"
+        :style="{
+          flexGrow: stats[p] || 0.5,
+          transform: `scale(${0.85 + (stats[p] / (maxDeaths || 1)) * 0.3})`,
+          zIndex: loserPlayer === p ? 2 : 1,
+        }"
+      >
         <div class="stat-player">{{ p }}</div>
-        <div class="stat-count">{{ stats[p] }} 次</div>
+        <div class="stat-count">{{ stats[p] }}</div>
+        <div class="stat-label">次死亡</div>
         <div class="loser-badge" v-if="loserPlayer === p">🏆 萝莉</div>
       </div>
     </div>
@@ -129,20 +126,6 @@ function clearAll() {
         </select>
       </div>
       <div class="form-row">
-        <label>角色名</label>
-        <input type="text" v-model="newDeath.character" placeholder="游戏内角色名" />
-      </div>
-      <div class="form-row">
-        <label>职业</label>
-        <select v-model="newDeath.occupation">
-          <option v-for="o in OCCUPATIONS" :key="o" :value="o">{{ o }}</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>存活天数</label>
-        <input type="number" v-model.number="newDeath.daysSurvived" min="0" max="365" />
-      </div>
-      <div class="form-row">
         <label>死亡原因</label>
         <input type="text" v-model="newDeath.cause" placeholder="被咬死/摔死/饿死..." />
       </div>
@@ -161,9 +144,6 @@ function clearAll() {
             <th>日期</th>
             <th>时间</th>
             <th>玩家</th>
-            <th>角色名</th>
-            <th>职业</th>
-            <th>存活</th>
             <th>死因</th>
             <th>备注</th>
             <th></th>
@@ -175,9 +155,6 @@ function clearAll() {
             <td>{{ r.date }}</td>
             <td>{{ r.time }}</td>
             <td :class="{ 'loser-name': loserPlayer === r.player }">{{ r.player }}</td>
-            <td>{{ r.character }}</td>
-            <td>{{ r.occupation }}</td>
-            <td>{{ r.daysSurvived }} 天</td>
             <td>{{ r.cause }}</td>
             <td class="note-cell">{{ r.note }}</td>
             <td>
@@ -199,47 +176,61 @@ function clearAll() {
   margin-top: 1rem;
 }
 
-/* Stats */
+/* Stats Cards */
 .stats-bar {
   display: flex;
   gap: 1rem;
   margin-bottom: 0.5rem;
-  flex-wrap: wrap;
+  align-items: flex-end;
+  min-height: 160px;
 }
 .stat-card {
   flex: 1;
-  min-width: 140px;
+  min-width: 130px;
   background: #141414;
-  border: 1px solid #222;
-  border-radius: 8px;
-  padding: 1rem;
+  border: 2px solid #222;
+  border-radius: 10px;
+  padding: 1.2rem 1rem;
   text-align: center;
-  transition: all 0.3s;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
 }
 .stat-player {
   color: #999;
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 .stat-count {
   color: #ccc;
-  font-size: 1.6rem;
+  font-size: 2.4rem;
   font-weight: bold;
+  line-height: 1;
+}
+.stat-label {
+  color: #555;
+  font-size: 0.8rem;
 }
 .loser-card {
   border-color: #8b0000;
-  background: #1a1414;
+  background: #1a1212;
+  box-shadow: 0 0 20px rgba(139, 0, 0, 0.25);
 }
 .loser-card .stat-player {
-  color: #8b0000;
-  font-weight: bold;
+  color: #c44;
+}
+.loser-card .stat-count {
+  color: #c44;
 }
 .loser-badge {
-  margin-top: 0.5rem;
-  color: #8b0000;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
   font-weight: bold;
-  font-size: 0.85rem;
+  color: #8b0000;
 }
 .total-line {
   color: #666;
@@ -350,7 +341,6 @@ tr:hover td {
 }
 .note-cell {
   color: #666;
-  font-style: italic;
   max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -360,7 +350,7 @@ tr:hover td {
   background: #1a1414 !important;
 }
 .loser-name {
-  color: #8b0000;
+  color: #c44;
   font-weight: bold;
 }
 .btn-del {
@@ -380,7 +370,18 @@ tr:hover td {
 }
 
 @media (max-width: 640px) {
-  .stats-bar { flex-direction: column; }
+  .stats-bar {
+    flex-direction: column;
+    min-height: auto;
+    align-items: stretch;
+  }
+  .stat-card {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+  .stat-count { font-size: 1.5rem; }
   .form-panel { grid-template-columns: 1fr; }
 }
 </style>
