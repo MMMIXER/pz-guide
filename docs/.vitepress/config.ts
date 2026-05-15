@@ -64,10 +64,13 @@ export default defineConfig({
       {
         text: "🩺 生存技巧",
         collapsed: false,
-        items: [
-          { text: "生存要领", link: "/survival/" },
-          { text: "💀 游玩记录", link: "/survival/game-log" },
-        ],
+        items: [{ text: "生存要领", link: "/survival/" }],
+      },
+      {
+        text: "💀 游玩记录",
+        collapsed: false,
+        items: [{ text: "死亡记录", link: "/game-log/" }],
+      },
       },
     ],
     docFooter: { prev: "上一页", next: "下一页" },
