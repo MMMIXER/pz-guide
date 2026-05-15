@@ -1,0 +1,111 @@
+:root {
+  --vp-c-bg: #0d0d0d;
+  --vp-c-bg-soft: #141414;
+  --vp-c-bg-alt: #1a1a1a;
+  --vp-c-bg-elv: #1f1f1f;
+  --vp-c-border: #2a1515;
+  --vp-c-divider: #222;
+  --vp-c-text-1: #ccc;
+  --vp-c-text-2: #999;
+  --vp-c-text-3: #666;
+  --vp-c-brand-1: #8b0000;
+  --vp-c-brand-2: #a01010;
+  --vp-c-brand-3: #6b0000;
+  --vp-c-brand-soft: rgba(139, 0, 0, 0.15);
+  --vp-c-tip-1: #8b0000;
+  --vp-c-tip-2: #6b0000;
+  --vp-c-tip-3: #8b0000;
+  --vp-c-tip-soft: rgba(139, 0, 0, 0.15);
+  --vp-c-warning-1: #c44;
+  --vp-c-warning-2: #a33;
+  --vp-c-warning-soft: rgba(204, 68, 68, 0.15);
+  --vp-c-danger-1: #c44;
+  --vp-c-danger-2: #a33;
+  --vp-c-danger-soft: rgba(204, 68, 68, 0.12);
+  --vp-button-brand-bg: #8b0000;
+  --vp-button-brand-hover-bg: #a01010;
+  --vp-button-brand-active-bg: #6b0000;
+  --vp-button-brand-text: #eee;
+  --vp-custom-block-tip-bg: #1a1414;
+  --vp-custom-block-tip-border: #8b0000;
+  --vp-custom-block-warning-bg: #1a1414;
+  --vp-custom-block-warning-border: #c44;
+  --vp-custom-block-danger-bg: #1a1414;
+  --vp-custom-block-danger-border: #c44;
+  --vp-code-block-bg: #0f0f0f;
+  --vp-code-line-highlight-color: rgba(139, 0, 0, 0.1);
+  --vp-sidebar-bg-color: #0f0f0f;
+}
+
+/* Sidebar */
+.VPSidebar {
+  background: #0f0f0f !important;
+  border-right: 1px solid #2a1515 !important;
+}
+.VPSidebarItem .item .link.active {
+  background: #1a1a1a !important;
+  border-left: 2px solid #8b0000;
+}
+.VPSidebarItem .item .link:hover {
+  color: #8b0000 !important;
+}
+
+/* Navbar */
+.VPNav {
+  background: #0f0f0f !important;
+  border-bottom: 1px solid #2a1515 !important;
+}
+.VPNavBarTitle .title {
+  color: #8b0000 !important;
+  font-weight: bold;
+}
+
+/* Tables */
+.vp-doc table {
+  background: #141414;
+  border: 1px solid #222;
+}
+.vp-doc th {
+  background: #1a1a1a;
+  color: #999;
+  border-color: #333;
+}
+.vp-doc td {
+  border-color: #222;
+  color: #ccc;
+}
+.vp-doc tr:nth-child(2n) {
+  background: #111;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8b0000;
+}
+
+/* Custom block overrides */
+.vp-doc .custom-block.tip {
+  background: #1a1414;
+  border-left: 3px solid #8b0000;
+  border-radius: 0 4px 4px 0;
+}
+.vp-doc .custom-block.warning {
+  background: #1a1414;
+  border-left: 3px solid #c44;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Search */
+.VPSearch {
+  color: #ccc;
+}
