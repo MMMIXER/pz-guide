@@ -45,8 +45,12 @@ features:
     title: 生存技巧
     details: 断水断电应对、冬季生存、医疗急救、安全屋建造
     link: /survival/
+  - icon: 🆕
+    title: Build 42 更新攻略
+    details: B42 核心变化、锻造畜牧、职业与武器排名——面向 B41 老玩家
+    link: /b42/
 ---
 
-::: warning B41 版本说明
-本指南所有内容基于 **Project Zomboid Build 41** 稳定版。B42 或实验性版本的改动将不会被包含，以确保信息的准确性。
+::: tip B42 攻略已上线
+👋 B41 老玩家？查看 **[Build 42 更新攻略](/b42/)** — 只讲变化，不讲基础。
 :::
